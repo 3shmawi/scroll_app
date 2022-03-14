@@ -1,6 +1,8 @@
+import '../../models/notificationModel.dart';
+
 String? uId;
 
-// List<NotificationModel> notificationList =[];
+ List<NotificationModel> notificationList =[];
 
 String daysBetween(DateTime postDate) {
   if ((DateTime.now().difference(postDate).inHours / 24).round() == 0) {

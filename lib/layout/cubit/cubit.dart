@@ -18,8 +18,10 @@ import 'package:scroll/modules/requests/requests_screen.dart';
 import 'package:scroll/shared/styles/icon_broken.dart';
 
 import '../../models/message_model.dart';
+import '../../models/notificationModel.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/network/local/cache_helper.dart';
+import '../../shared/network/remote/dio_helper.dart';
 
 class MasterCubit extends Cubit<MasterStates> {
   MasterCubit() : super(MasterInitialState());
@@ -322,6 +324,7 @@ class MasterCubit extends Cubit<MasterStates> {
   void uploadNewPostImage({
     required String postText,
   }) {
+    emit(CreateNewPostLoadingState());
     firebase_storage.FirebaseStorage.instance
         .ref()
         .child('posts/${Uri.file(postImage!.path).pathSegments.last}')
@@ -332,6 +335,7 @@ class MasterCubit extends Cubit<MasterStates> {
           postText: postText,
           postImage: value,
         );
+        addPhotoToUserPhotos(value);
         debugPrint(value);
       }).catchError((error) {
         emit(CreateNewPostErrorState());
@@ -610,6 +614,19 @@ class MasterCubit extends Cubit<MasterStates> {
         .collection('messages')
         .add(message.toMap())
         .then((value) {
+      DioHelper.postData(
+        senderUser: user!,
+        receiverToken: receiverUser.uToken.toString(),
+        dateTime: DateTime.now().toString(),
+      ).then(
+        (value) => saveNotifications(
+          NotificationModel(
+            senderName: user!.name,
+            senderImage: user!.image,
+            dateTime: DateTime.now().toString(),
+          ),
+        ),
+      );
       emit(SendMessageSuccessState());
     }).catchError(
       (error) {
@@ -762,6 +779,68 @@ class MasterCubit extends Cubit<MasterStates> {
     });
   }
 
+  //*//reply of comments**********************
+
+  //set reply of comments****************
+  void setReplyComments({
+    required String text,
+    required UserModel user,
+    required String postId,
+    required String commentId,
+  }) {
+    emit(SetReplyCommentsLoadingState());
+    CommentModel comment = CommentModel(
+      dateTime: DateTime.now().toString(),
+      commentUser: user,
+      commentID: null,
+      commentText: text,
+    );
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .collection('reply')
+        .add(comment.toMap())
+        .then((value) {
+      emit(SetReplyCommentsSuccessState());
+    }).catchError((error) {
+      debugPrint(error.toString());
+      emit(SetReplyCommentsErrorState());
+    });
+  }
+
+  // get comments************************
+
+  List<CommentModel> replyComments = [];
+
+  void getReplyComments({required String postId, required String commentId}) {
+    emit(GetReplyCommentsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .collection('reply')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      replyComments.clear();
+      for (var element in event.docs) {
+        replyComments.add(CommentModel.fromJson(element.data()));
+        for (var element in replyComments) {
+          if (element.commentUser!.uId == uId) {
+            element.commentUser!.name = user!.name;
+            element.commentUser!.image = user!.image;
+          }
+        }
+      }
+      emit(GetReplyCommentsSuccessState());
+    }).onError((error) {
+      emit(GetReplyCommentsErrorState());
+    });
+  }
+
   // get count of comments*****************
 
   Map<String, dynamic> countOfComments = {};
@@ -798,4 +877,41 @@ class MasterCubit extends Cubit<MasterStates> {
     });
   }
 
+//*// Search post
+
+  List<PostModel> searchResult = [];
+
+  Future<void> search(String text) async {
+    emit(SearchLoadingState());
+    searchResult.clear();
+
+    for (var element in allPosts) {
+      if (element.postText!.contains(text)) {
+        searchResult.add(element);
+      }
+    }
+
+    emit(SearchSuccessState());
+  }
+
+  // save Notifications.......
+  void saveNotifications(NotificationModel notification) {
+    FirebaseFirestore.instance
+        .collection('notifications')
+        .add(notification.toMap());
+  }
+
+  //get notifications.........
+  Future<void> getNotifications() async {
+    notificationList.clear();
+    await FirebaseFirestore.instance
+        .collection('notifications')
+        .orderBy('dateTime', descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        notificationList.add(NotificationModel.fromJson(element.data()));
+      }
+    });
+  }
 }

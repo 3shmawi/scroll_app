@@ -5,8 +5,11 @@ import 'package:scroll/layout/cubit/cubit.dart';
 import 'package:scroll/layout/cubit/states.dart';
 import 'package:scroll/modules/add_post/new_post_screen.dart';
 import 'package:scroll/modules/login/login_screen.dart';
+import 'package:scroll/modules/notification/notification_screen.dart';
 import 'package:scroll/modules/search/search_screen.dart';
 import 'package:scroll/shared/styles/icon_broken.dart';
+
+import '../shared/components/constants.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -103,12 +106,50 @@ class HomeState extends State<Home> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: IconButton(
-                          onPressed: () {
-                            cubit.signOut();
-                          },
-                          icon: const Icon(
-                            IconBroken.Notification,
-                          )),
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Notifications(),
+                              ), (route) {
+                            return true;
+                          });
+                        },
+                        icon: notificationList.isNotEmpty
+                            ? Stack(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 18.0, vertical: 8),
+                                    child: Icon(IconBroken.Notification),
+                                  ),
+                                  Positioned(
+                                    right: 8,
+                                    top: 5,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(1),
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepOrange,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 15,
+                                        minHeight: 15,
+                                      ),
+                                      child: Text(
+                                        '${notificationList.length}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : const Icon(IconBroken.Notification),
+                      ),
                     ),
                   ],
                 ),

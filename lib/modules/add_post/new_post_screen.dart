@@ -64,9 +64,11 @@ class _NewPostScreenState extends State<NewPostScreen> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                if (state is CreateNewPostLoadingState)
+                if (state is CreateNewPostLoadingState ||
+                    state is UploadNewPostImageState)
                   const LinearProgressIndicator(),
-                if (state is CreateNewPostLoadingState)
+                if (state is CreateNewPostLoadingState ||
+                    state is UploadNewPostImageState)
                   const SizedBox(
                     height: 5.0,
                   ),

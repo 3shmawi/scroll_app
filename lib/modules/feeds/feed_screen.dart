@@ -4,6 +4,8 @@ import 'package:scroll/layout/cubit/cubit.dart';
 import 'package:scroll/layout/cubit/states.dart';
 import 'package:scroll/modules/comments/comment_screen.dart';
 import 'package:scroll/modules/likes/liked_screen.dart';
+import 'package:scroll/modules/show_expanded_photo/show_expanded_photo.dart';
+import 'package:scroll/modules/show_user_profile/show_user_profile.dart';
 import 'package:scroll/shared/components/constants.dart';
 import 'package:scroll/shared/styles/icon_broken.dart';
 
@@ -53,7 +55,28 @@ class FeedsScreen extends StatelessWidget {
                                       ),
                                     ),
                                     onTap: () {
-                                      cubit.changeBottomNavigationBar(4);
+                                      cubit
+                                          .getProfileUser(
+                                              cubit.allPosts[index].uId!)
+                                          .then(
+                                        (value) {
+                                          cubit.profileUser!.uId == uId
+                                              ? cubit
+                                                  .changeBottomNavigationBar(4)
+                                              : Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ShowUserProfile(
+                                                      cubit.profileUser!,
+                                                    ),
+                                                  ),
+                                                  (route) {
+                                                    return true;
+                                                  },
+                                                );
+                                        },
+                                      );
                                     },
                                     borderRadius: BorderRadius.circular(25),
                                   ),
@@ -76,7 +99,28 @@ class FeedsScreen extends StatelessWidget {
                                               ),
                                         ),
                                         onTap: () {
-                                          cubit.changeBottomNavigationBar(4);
+                                          cubit
+                                              .getProfileUser(
+                                              cubit.allPosts[index].uId!)
+                                              .then(
+                                                (value) {
+                                              cubit.profileUser!.uId == uId
+                                                  ? cubit
+                                                  .changeBottomNavigationBar(4)
+                                                  : Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ShowUserProfile(
+                                                        cubit.profileUser!,
+                                                      ),
+                                                ),
+                                                    (route) {
+                                                  return true;
+                                                },
+                                              );
+                                            },
+                                          );
                                         },
                                         borderRadius: BorderRadius.circular(5),
                                       ),
@@ -231,13 +275,29 @@ class FeedsScreen extends StatelessWidget {
                                   clipBehavior: Clip.antiAliasWithSaveLayer,
                                   elevation: 5.0,
                                   margin: const EdgeInsets.all(0),
-                                  child: Image(
-                                    image: NetworkImage(
-                                      '${cubit.allPosts[index].postImage}',
+                                  child: InkWell(
+                                    child: Image(
+                                      image: NetworkImage(
+                                        '${cubit.allPosts[index].postImage}',
+                                      ),
+                                      fit: BoxFit.cover,
+                                      height: 330.0,
+                                      width: double.infinity,
                                     ),
-                                    fit: BoxFit.cover,
-                                    height: 180.0,
-                                    width: double.infinity,
+                                    onTap: () {
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ShowExpandedPhoto(
+                                            cubit.allPosts[index].postImage,
+                                          ),
+                                        ),
+                                        (route) {
+                                          return true;
+                                        },
+                                      );
+                                    },
                                   ),
                                 ),
                               Padding(

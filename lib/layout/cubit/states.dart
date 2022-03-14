@@ -99,6 +99,8 @@ class UpdateUserDataErrorState extends MasterStates {}
 
 //Create New Post
 
+class UploadNewPostImageState extends MasterStates {}
+
 class CreateNewPostLoadingState extends MasterStates {}
 
 class CreateNewPostSuccessState extends MasterStates {}
@@ -203,21 +205,42 @@ class EditProfileUpdateBioSuccessState extends MasterStates {}
 
 class EditProfileUpdateBioErrorState extends MasterStates {}
 
-//*//comments states
+//*//comments of post states
 
-//set comment
+//set comment of post
 class SetCommentsLoadingState extends MasterStates {}
 
 class SetCommentsSuccessState extends MasterStates {}
 
 class SetCommentsErrorState extends MasterStates {}
 
-//get comments
+//get comments of post
 class GetCommentsLoadingState extends MasterStates {}
 
 class GetCommentsSuccessState extends MasterStates {}
 
 class GetCommentsErrorState extends MasterStates {}
+
+//*//reply comments states
+
+//set reply of comment
+class SetReplyCommentsLoadingState extends MasterStates {}
+
+class SetReplyCommentsSuccessState extends MasterStates {}
+
+class SetReplyCommentsErrorState extends MasterStates {}
+
+//get reply of comments
+class GetReplyCommentsLoadingState extends MasterStates {}
+
+class GetReplyCommentsSuccessState extends MasterStates {}
+
+class GetReplyCommentsErrorState extends MasterStates {}
+
+
+
+
+
 //*******************
 class GetLastChatSuccessState extends MasterStates {}
 //
@@ -255,4 +278,10 @@ class UpdateNumOfCommentsSuccessState extends MasterStates {}
 class SignOutSuccessState extends MasterStates {}
 
 class SignOutErrorState extends MasterStates {}
+
 class GetSuccessState extends MasterStates {}
+
+//*// Search States
+
+class SearchLoadingState extends MasterStates {}
+class SearchSuccessState extends MasterStates {}

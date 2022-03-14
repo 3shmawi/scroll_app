@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scroll/layout/cubit/cubit.dart';
 import 'package:scroll/layout/cubit/states.dart';
+import 'package:scroll/modules/comments/reply_comment_screen.dart';
 import 'package:scroll/modules/likes/liked_screen.dart';
 import 'package:scroll/shared/styles/icon_broken.dart';
 
@@ -210,25 +211,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                     .caption,
                                               ),
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: InkWell(
-                                                child: Text(
-                                                  '  like  ',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .caption
-                                                      ?.copyWith(
-                                                        color: Colors.blue,
-                                                      ),
-                                                ),
-                                                onTap: () {},
-                                                borderRadius:
-                                                    BorderRadius.circular(3.0),
-                                              ),
-                                            ),
+                                            const Spacer(),
                                             InkWell(
                                               child: Text(
                                                 '  Reply  ',
@@ -239,25 +222,31 @@ class _CommentScreenState extends State<CommentScreen> {
                                                       color: Colors.blue,
                                                     ),
                                               ),
-                                              onTap: () {},
+                                              onTap: () {
+                                                cubit.getReplyComments(
+                                                  commentId: cubit
+                                                      .comments[index]
+                                                      .commentID!,
+                                                  postId: widget.postId,
+                                                );
+                                                Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReplyCommentScreen(
+                                                          cubit.comments[index],
+                                                            widget.postId,
+                                                            cubit
+                                                                .comments[index]
+                                                                .commentID!,),
+                                                  ),
+                                                  (route) {
+                                                    return true;
+                                                  },
+                                                );
+                                              },
                                               borderRadius:
                                                   BorderRadius.circular(3.0),
-                                            ),
-                                            const Spacer(),
-                                            Text(
-                                              '0',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption,
-                                            ),
-                                            const Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 5.0),
-                                              child: Icon(
-                                                Icons.favorite,
-                                                size: 20.0,
-                                                color: Colors.redAccent,
-                                              ),
                                             ),
                                           ],
                                         ),
