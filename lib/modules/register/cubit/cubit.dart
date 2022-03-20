@@ -88,4 +88,6 @@ class RegisterCubit extends Cubit<RegisterStates> {
 
     emit(RegisterChangePasswordVisibilityState());
   }
+
+
 }

@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scroll/layout/cubit/cubit.dart';
 import 'package:scroll/layout/home_screen.dart';
 import 'package:scroll/modules/register/cubit/cubit.dart';
@@ -24,9 +25,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var passwordController = TextEditingController();
 
   var phoneController = TextEditingController();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   @override
   Widget build(BuildContext context) {
+    GoogleSignInAccount? user = _googleSignIn.currentUser;
     return BlocProvider(
       create: (BuildContext context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit, RegisterStates>(
@@ -215,6 +218,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fallback: (context) =>
                               const Center(child: CircularProgressIndicator()),
                         ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            OutlinedButton(
+                              onPressed: user != null
+                                  ? null
+                                  : () async {
+                                      await _googleSignIn
+                                          .signIn()
+                                          .then((value) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const Home(),
+                                          ),
+                                          (route) {
+                                            return false;
+                                          },
+                                        );
+                                      });
+                                      setState(() {});
+                                    },
+                              child: const Text(
+                                'G+',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            OutlinedButton(
+                              onPressed: () {},
+                              child: const Icon(
+                                Icons.facebook_outlined,
+                                size: 25,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -227,3 +275,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+//
+//   class GoogleLoginApp extends StatefulWidget {
+//   const GoogleLoginApp({ Key? key }) : super(key: key);
+//
+//   @override
+//   _GoogleLoginAppState createState() => _GoogleLoginAppState();
+//   }
+//
+//   class _GoogleLoginAppState extends State<GoogleLoginApp> {
+//   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//   GoogleSignInAccount? user = _googleSignIn.currentUser;
+//
+//   return MaterialApp(
+//   home: Scaffold(
+//   appBar: AppBar(
+//   title: Text('Google Demo (Logged ' + (user == null ? 'out' : 'in') + ')'),
+//   ),
+//   body: Center(
+//   child: Column(
+//   children: [
+//   ElevatedButton(child: Text('Sign In'),
+//   onPressed: user != null ? null : () async {
+//   await _googleSignIn.signIn();
+//   setState(() {});
+//   }),
+//   ElevatedButton(child: Text('Sign Out'),
+//   onPressed: user == null ? null : () async {
+//   await _googleSignIn.signOut();
+//   setState(() {});
+//   }),
+//   ],
+//   ),
+//   ),
+//   ),
+//   );
+//   }
+//   }
+// }

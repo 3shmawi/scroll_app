@@ -49,11 +49,12 @@ class MasterCubit extends Cubit<MasterStates> {
   ];
 
   List<Widget> listOfScreens = [
+    const ProfileScreen(),
     const FeedsScreen(),
     ChatScreen(),
     const NewPostScreen(),
     const UsersScreen(),
-    const ProfileScreen(),
+
   ];
 
   void changeBottomNavigationBar(int index) {

@@ -12,6 +12,8 @@ import 'package:scroll/shared/components/constants.dart';
 import 'package:scroll/shared/network/local/cache_helper.dart';
 import 'package:scroll/shared/network/remote/dio_helper.dart';
 import 'package:scroll/shared/styles/themes.dart';
+import 'package:scroll/unused/sparks_foundation/cubit/cubit.dart';
+import 'package:scroll/unused/sparks_foundation/sparks_foundation.dart';
 
 import 'models/notificationModel.dart';
 
@@ -80,7 +82,9 @@ class MyApp extends StatelessWidget {
             ..getUsersDataPosts()
             ..getUserData()
             ..getNotifications(),
+
         ),
+        BlocProvider(create: (context)=> BankCubit()..createDatabase(),),
       ],
       child: BlocConsumer<MasterCubit, MasterStates>(
         listener: (context, state) {},
@@ -103,7 +107,8 @@ class MyApp extends StatelessWidget {
                 } else if (snapshot.hasData) {
                   //return const Calculator();
                   //return const Test();
-                  return SecondPage(startWidget: startWidget);
+                  //return  const SparksQuiz();
+                  return const LoginScreen();
                 } else {
                   return const Center(
                     child: CircularProgressIndicator(),
