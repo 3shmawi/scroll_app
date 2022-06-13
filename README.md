@@ -1,18 +1,24 @@
 # scroll
 
-A new Flutter project.
+some package i have used
 
-## Getting Started
+########### state management
+  bloc
+  flutter_bloc
 
-This project is a starting point for a Flutter application.
+########### animations
+  animated_text_kit
+  flutter_staggered_animations
 
-A few resources to get you started if this is your first Flutter project:
+########### firebase
+  firebase_core
+  firebase_auth
+  firebase_database
+  cloud_firestore
+  firebase_storage
+  firebase_messaging
+  
+  
+  ![scroll app](https://user-images.githubusercontent.com/100779215/173344859-3e70eded-4906-43b8-8164-a9e9302fbbc6.jpeg)
+![comments](https://user-images.githubusercontent.com/100779215/173344887-13395a36-2fa6-41ba-8532-826cbf099dcc.jpeg)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# scroll_app
-# scroll_app
